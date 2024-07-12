@@ -4,7 +4,7 @@
 - URI 구성
   : Protocol (http, https, ftp, smtp)
   : URL (도메인)
-  : Port (3000 번 리액트, 3306 번 데이터베이스, 8080 번 웹서버)
+  : Port (3000 번 리액트 테스트용, 3306 번 데이터베이스, 8080 번 웹서버)
   : Path (파일의 경로)
   : Query String (?쿼리명=값&쿼리명=값)
 - 예) http://localhost:3000/todo/login?id=hong&pass=1234
