@@ -88,32 +88,6 @@ const useAxios = (_url, _payload = null, _method = "GET") => {
 export default useAxios;
 ```
 
-- 사용
-
-```js
-import React from "react";
-import useAxios from "./hooks/useAxios";
-
-const AppUse = () => {
-  // 아래의 경우는 돌려받는 이름이 똑같아서 여러번 활용이 어렵다.
-  // 그래서 별도의 별칭을 하나 더 작성한다.
-  const {
-    data: getData,
-    loading: getLoading,
-    error: getError,
-  } = useAxios("/api/member/1", null, "get");
-  const {
-    data: postData,
-    loading: postLoading,
-    error: postError,
-  } = useAxios("/api/user", { user: "kim" }, "post");
-
-  return <div></div>;
-};
-
-export default AppUse;
-```
-
 ### 3.2. 로그인용 Hook
 
 - `src/hooks/useLogin.js`
@@ -123,9 +97,9 @@ import axios from "axios";
 import { useState } from "react";
 
 // 로그인에 필요로한 기능을 모아서 제공한다.
-// const {data, loading, error, login} = useLogin("kim", "1234")
-// const {isLogin} = useLogin("kim", "1234")
-const useLogin = (_id, _pass) => {
+// const {data, loading, error, login} = useLogin()
+// const {isLogin} = useLogin()
+const useLogin = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -153,3 +127,65 @@ export default useLogin;
 ### 3.2. 컴포넌트 상태관리 업데이트용 Hook
 
 - `src/hooks/useComponent.js`
+
+```js
+import { useEffect, useState } from "react";
+
+// 화면의 리사이즈를 체크하는 용도의 customHook
+const useComponent = () => {
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  return windowSize;
+};
+export default useComponent;
+```
+
+- 사용하기
+  : `src/AppUse.js`
+
+```js
+import React from "react";
+import useAxios from "./hooks/useAxios";
+import useLogin from "./hooks/useLogin";
+import useComponent from "./hooks/useComponent";
+
+const AppUse = () => {
+  // 아래의 경우는 돌려받는 이름이 똑같아서 여러번 활용이 어렵다.
+  // 그래서 별도의 별칭을 하나 더 작성한다.
+  const {
+    data: getData,
+    loading: getLoading,
+    error: getError,
+  } = useAxios("/api/member/1", null, "get");
+  const {
+    data: postData,
+    loading: postLoading,
+    error: postError,
+  } = useAxios("/api/user", { user: "kim" }, "post");
+
+  const { data, loading, error, login } = useLogin();
+  login("kim", "1234");
+
+  const { width, height } = useComponent();
+
+  return <div></div>;
+};
+
+export default AppUse;
+```
